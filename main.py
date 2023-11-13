@@ -1,4 +1,4 @@
-# Situations
+# Constraints
 
 # 1. There are only n slots inside the fitting room of a department store. 
 #    Thus, there can only be at most n persons inside the fitting room at a time.
