@@ -16,9 +16,9 @@
 
 
 print("Input the following with spaces in between e.g.: 1 5 9")
-print("n - the number of slots inside the fitting room")
-print("b - number of blue threads")
-print("g - number of green threads") 
+print("     n - the number of slots inside the fitting room")
+print("     b - number of blue threads")
+print("     g - number of green threads") 
 
 n_slots, b_threads, g_threads = input().split()
 
