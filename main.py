@@ -1,4 +1,5 @@
 import threading
+import random
 
 # Constraints
 
@@ -78,7 +79,6 @@ def create_thread(color, sleep=0):
         thread: the thread that will enter the fitting room
     """
     new_thread = threading.Thread(target=run_thread, args=(len(threads), color))
-    threads.append(new_thread)
     return new_thread
     
 def run_thread(thread_id, color):
@@ -100,8 +100,31 @@ def simulate_fitting_room(n, b, g, random=None):
         g (int): number of green threads
         random (int): seed for randomizing how the threads enter
     """
+    random.seed(random)
+
+    # Randomly create threads based on the seed
+    # and the number of blue and green threads
+    total_threads = b + g
+    added_blue = 0
+    added_green = 0
+
+    for i in range(total_threads):
+        if added_blue == b:
+            threads.append(create_thread("green"))
+            added_green += 1
+        elif added_green == g:
+            threads.append(create_thread("blue"))
+            added_blue += 1
+        else:
+            if random.randint(0, 1) == 0:
+                threads.append(create_thread("blue"))
+                added_blue += 1
+            else:
+                threads.append(create_thread("green"))
+                added_green += 1
+
     pass
 
 
 if __name__ == "__main__":
-    simulate_fitting_room(n_slots, b_threads, g_threads)
+    simulate_fitting_room(n_slots, b_threads, g_threads, random=11)
