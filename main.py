@@ -15,6 +15,12 @@ class FittingRoom:
         # Acquire the lock
         self.condition.acquire()
 
+        # (Optional print) If the current color is not the same as the thread's color, wait for the room to be empty
+        if self.current_color is not None and self.current_color != color:
+            print(
+                f"Thread {thread_id} ({color}) waits as the fitting room is occupied by {self.current_color}."
+            )
+
         # Wait for the room to be empty or for the current color to be the same as the thread's color
         while self.current_color is not None and self.current_color != color:
             self.condition.wait()
@@ -22,21 +28,22 @@ class FittingRoom:
         # Release the lock
         self.condition.release()
 
+        # If the room is empty, acquire the room semaphore and set the current color
         if self.room_sem._value == n:
             self.room_sem.acquire()
+            self.current_color = color
             print(f"{color.capitalize()} only.")
+            # DEBUG
+            # print(f"{color.capitalize()} ({thread_id}) enters. {self.room_sem._value}")
         else:
             self.room_sem.acquire()
+            # DEBUG
+            # print(f"{color.capitalize()} ({thread_id}) enters. {self.room_sem._value}")
 
         with self.mutex:
             if self.current_color is None or self.current_color == color:
-                self.current_color = color
                 print(
                     f"Thread {thread_id} ({self.current_color}) enters the fitting room."
-                )
-            else:
-                print(
-                    f"Thread {thread_id} ({color}) waits as the fitting room is occupied by {self.current_color}."
                 )
 
     def exit_room(self, thread_id, color):
@@ -46,7 +53,7 @@ class FittingRoom:
             if self.is_empty():
                 print("Empty fitting room.")
                 self.current_color = None
-                self.condition.notify(1)
+                self.condition.notify_all()
 
     def is_empty(self):
         return self.room_sem._value == self.n
@@ -58,7 +65,6 @@ def simulate_fitting_room(n, b, g):
 
     def run_thread(thread_id, color):
         fitting_room.enter_room(thread_id, color)
-        # time.sleep(1)
         fitting_room.exit_room(thread_id, color)
 
     for i in range(b):
