@@ -1,3 +1,5 @@
+import threading
+
 # Constraints
 
 # 1. There are only n slots inside the fitting room of a department store. 
@@ -40,3 +42,57 @@ n_slots = int(n_slots)
 b_threads = int(b_threads)
 g_threads = int(g_threads)
 
+def enter_fitting_room(thread_id, color):
+    """This enters a thread into the fitting room.
+
+    Args:
+        thread_id (int): id of the thread
+        color (string): type of thread (blue or green)
+    """
+    pass
+
+def exit_fitting_room(thread_id, color):
+    """This exits a thread from the fitting room.
+
+    Args:
+        thread_id (int): id of the thread
+        color (string): type of thread (blue or green)
+    """
+    pass
+
+def create_thread(color, sleep=0):
+    """This constructs a thread that will enter the fitting room.
+
+    Args:
+        color (string): type of thread (blue or green)
+        sleep (int, optional): Changes the time the thread sleeps. Defaults to 0.
+    
+    Returns:
+        thread: the thread that will enter the fitting room
+    """
+    
+    return None
+    
+def run_thread(thread_id, color):
+    """This runs the thread.
+
+    Args:
+        thread_id (int): id of the thread
+        color (string): type of thread (blue or green)
+    """
+    pass
+
+def simulate_fitting_room(n, b, g, random=None):
+    """This simulates the fitting room.
+
+    Args:
+        n (int): number of slots inside the fitting room
+        b (int): number of blue threads
+        g (int): number of green threads
+        random (int): seed for randomizing how the threads enter
+    """
+    pass
+
+
+if __name__ == "__main__":
+    simulate_fitting_room(n_slots, b_threads, g_threads)
