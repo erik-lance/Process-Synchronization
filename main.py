@@ -1,5 +1,6 @@
 import threading
 import random
+import time
 
 # Constraints
 
@@ -43,10 +44,22 @@ n_slots = int(n_slots)
 b_threads = int(b_threads)
 g_threads = int(g_threads)
 
+rng = random
+rng.seed(11)
+
+n_ctr = 0
+
+# Mutex Lock
+mutex = threading.Lock()
+bg_mutex = threading.Lock()
+
 # Semaphores
-n_sem = threading.Semaphore(n_slots)
 b_sem = threading.Semaphore(n_slots)
 g_sem = threading.Semaphore(n_slots)
+
+waiting_sem = threading.Semaphore(1)
+
+is_blue_first = False
 
 threads: list[threading.Thread] = []
 
@@ -57,7 +70,58 @@ def enter_fitting_room(thread_id, color):
         thread_id (int): id of the thread
         color (string): type of thread (blue or green)
     """
-    pass
+    string_prompt = f"Thread {thread_id} ({color}) enters the fitting room."
+    
+    global n_ctr
+    global g_threads
+    global b_threads
+
+    failsafe = 5
+    i = 0
+    
+    # Start of critical section
+    mutex.acquire()
+
+    try:
+        # If the opposite color is the first to enter
+        if not is_empty():
+            if color == "blue":
+                mutex.release()
+                # Wait until green is empty
+                while(g_sem._value != n_slots):
+                    print("g_sem._value ", g_sem._value, " != ", n_slots)
+                    i+=1
+                    if i == failsafe: break
+                    pass
+                pass
+                print(string_prompt)
+                b_sem.acquire()
+            else:
+                mutex.release()
+                # Wait until blue is empty
+                while(b_sem._value != n_slots):
+                    print("b_sem._value ", b_sem._value, " != ", n_slots)
+                    i+=1
+                    if i == failsafe: break
+                    pass
+                pass
+                print(string_prompt)
+                g_sem.acquire()
+        else:
+            print(f"{color.capitalize()} only.")
+            print(string_prompt)
+            # n_ctr += 1
+
+            if color == "blue":
+                b_sem.acquire()
+            else:
+                g_sem.acquire()
+    except Exception as e:
+        print("Error: ", thread_id)
+    mutex.release()
+
+def is_empty():
+    return b_sem._value == n_slots and g_sem._value == n_slots
 
 def exit_fitting_room(thread_id, color):
     """This exits a thread from the fitting room.
@@ -66,6 +130,13 @@ def exit_fitting_room(thread_id, color):
         thread_id (int): id of the thread
         color (string): type of thread (blue or green)
     """
+    string_prompt = f"Thread {thread_id} ({color}) exits the fitting room."
+    print(string_prompt)
+
+    if color == "blue":
+        b_sem.release()
+    else:
+        g_sem.release()
     pass
 
 def create_thread(color, sleep=0):
@@ -88,7 +159,9 @@ def run_thread(thread_id, color):
         thread_id (int): id of the thread
         color (string): type of thread (blue or green)
     """
+    print("Thread: ", thread_id, " - ", color)
     enter_fitting_room(thread_id, color)
+    time.sleep(random.uniform(0,3))
     exit_fitting_room(thread_id, color)
 
 def simulate_fitting_room(n, b, g, random=None):
@@ -100,30 +173,17 @@ def simulate_fitting_room(n, b, g, random=None):
         g (int): number of green threads
         random (int): seed for randomizing how the threads enter
     """
-    random.seed(random)
 
-    # Randomly create threads based on the seed
-    # and the number of blue and green threads
-    total_threads = b + g
-    added_blue = 0
-    added_green = 0
+    for i in range(b):
+        threads.append(create_thread("blue"))
 
-    for i in range(total_threads):
-        if added_blue == b:
-            threads.append(create_thread("green"))
-            added_green += 1
-        elif added_green == g:
-            threads.append(create_thread("blue"))
-            added_blue += 1
-        else:
-            if random.randint(0, 1) == 0:
-                threads.append(create_thread("blue"))
-                added_blue += 1
-            else:
-                threads.append(create_thread("green"))
-                added_green += 1
+    for i in range(g):
+        threads.append(create_thread("green"))
 
-    pass
+    rng.shuffle(threads)  
+    
+    for t in threads: t.start()
+    for t in threads: t.join()
 
 
 if __name__ == "__main__":
