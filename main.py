@@ -47,6 +47,8 @@ n_sem = threading.Semaphore(n_slots)
 b_sem = threading.Semaphore(n_slots)
 g_sem = threading.Semaphore(n_slots)
 
+threads: list[threading.Thread] = []
+
 def enter_fitting_room(thread_id, color):
     """This enters a thread into the fitting room.
 
