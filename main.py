@@ -34,7 +34,7 @@ class FittingRoom:
             self.current_color = color
             print(f"{color.capitalize()} only.")
             # DEBUG
-            # print(f"{color.capitalize()} ({thread_id}) enters. {self.room_sem._value}")
+            # print(f"{color.capitalize()} ({thread_id}) enters. {self.room_sem._value} - FIRST TO ENTER")
         else:
             self.room_sem.acquire()
             # DEBUG
