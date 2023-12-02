@@ -65,7 +65,7 @@ def simulate_fitting_room(n, b, g):
 
     def run_thread(thread_id, color):
         fitting_room.enter_room(thread_id, color)
-        # time.sleep(0.5) - Uncomment this line to see the effect of threads waiting for the fitting room to be empty
+        # time.sleep(0.5) - Uncomment this line to see the effect of threads waiting, entering and exiting the fitting room in a more obvious way
         fitting_room.exit_room(thread_id, color)
 
     for i in range(b):
