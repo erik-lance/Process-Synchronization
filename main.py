@@ -77,8 +77,9 @@ def create_thread(color, sleep=0):
     Returns:
         thread: the thread that will enter the fitting room
     """
-    
-    return None
+    new_thread = threading.Thread(target=run_thread, args=(len(threads), color))
+    threads.append(new_thread)
+    return new_thread
     
 def run_thread(thread_id, color):
     """This runs the thread.
@@ -87,7 +88,8 @@ def run_thread(thread_id, color):
         thread_id (int): id of the thread
         color (string): type of thread (blue or green)
     """
-    pass
+    enter_fitting_room(thread_id, color)
+    exit_fitting_room(thread_id, color)
 
 def simulate_fitting_room(n, b, g, random=None):
     """This simulates the fitting room.
