@@ -9,7 +9,6 @@ class FittingRoom:
         self.room_sem = threading.BoundedSemaphore(n)
         self.current_color = None
         self.mutex = threading.Lock()
-        self.safety_mutex = threading.Lock()
         self.condition = threading.Condition(self.mutex)
 
     def enter_room(self, thread_id, color):
