@@ -35,8 +35,6 @@ class FittingRoom:
                 print(
                     f"Thread {thread_id} ({self.current_color}) enters the fitting room."
                 )
-                if self.is_empty():
-                    print(f"{self.current_color.capitalize()} only.")
             else:
                 print(
                     f"Thread {thread_id} ({color}) waits as the fitting room is occupied by {self.current_color}."
