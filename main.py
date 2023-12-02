@@ -14,13 +14,27 @@
 
 # Task: Coordinate between blue and green threads.
 
+VERBOSE = True
 
-print("Input the following with spaces in between e.g.: 1 5 9")
-print("     n - the number of slots inside the fitting room")
-print("     b - number of blue threads")
-print("     g - number of green threads") 
+n_prompt = ""
+b_prompt = ""
+g_prompt = ""
 
-n_slots, b_threads, g_threads = input().split()
+if VERBOSE:
+    print("Process Synchronization Project for CSOPESY")
+    print("Input the following: ")
+    print("     n - the number of slots inside the fitting room")
+    print("     b - number of blue threads")
+    print("     g - number of green threads")
+    print("----------------------------------------------")
+
+    n_prompt = "n: "
+    b_prompt = "b: "
+    g_prompt = "g: "
+
+n_slots = input(n_prompt)
+b_threads = input(b_prompt)
+g_threads = input(g_prompt)
 
 n_slots = int(n_slots)
 b_threads = int(b_threads)
