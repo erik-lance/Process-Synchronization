@@ -122,8 +122,19 @@ def simulate_fitting_room(n, b, g):
 
 
 if __name__ == "__main__":
-    n = int(input("Enter the number of slots inside the fitting room: "))
-    b = int(input("Enter the number of blue threads: "))
-    g = int(input("Enter the number of green threads: "))
+    n, b, g = None, None, None
+
+    n = input("Enter the number of slots inside the fitting room: ")
+    b = input("Enter the number of blue threads: ")
+    g = input("Enter the number of green threads: ")
+
+    # Error Checking
+    try:
+        n = int(n)
+        b = int(b)
+        g = int(g)
+    except ValueError:
+        print("Invalid input. Please enter a valid integer. Stopping...")
+        exit()
 
     simulate_fitting_room(n, b, g)
