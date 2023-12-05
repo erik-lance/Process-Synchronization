@@ -4,6 +4,17 @@ import random
 
 
 class FittingRoom:
+    """
+    Synchronization Technique:
+    - Semaphores: Used a BoundedSemaphore (`self.room_sem`) to control access to the fitting room slots.
+    - Mutex Lock: Implemented a mutex lock (`self.mutex`) to protect critical sections for atomic operations.
+    - Condition Variable: Utilized a condition variable (`self.condition`) for conditional waiting and notification.
+    - Thread Synchronization: Implemented waiting and notification mechanisms to coordinate thread access to the fitting room.
+
+    Additional Notes:
+    - Debugging prints are provided (commented) for better understanding of thread interactions.
+    """
+
     def __init__(self, n):
         self.n = n
         self.room_sem = threading.BoundedSemaphore(n)
