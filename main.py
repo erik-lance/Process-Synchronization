@@ -23,6 +23,15 @@ class FittingRoom:
         self.condition = threading.Condition(self.mutex)
 
     def enter_room(self, thread_id, color):
+        """Makes the thread enter the fitting room. If the room is empty, 
+        it will acquire the room semaphore and set the current color. Else,
+        logic is provided to make the thread wait for the fitting room to be empty
+        again if the current color is not the same as the thread's color.
+
+        Args:
+            thread_id (_type_): _description_
+            color (_type_): _description_
+        """
         # Acquire the lock
         self.condition.acquire()
 
@@ -58,6 +67,14 @@ class FittingRoom:
                 )
 
     def exit_room(self, thread_id, color):
+        """Makes the thread exit the fitting room. If the room is empty, 
+        it will notify all threads waiting for the fitting room to be empty.
+        It also releases the room semaphore.
+
+        Args:
+            thread_id (int): number id of the thread
+            color (string): color of the thread
+        """
         with self.mutex:
             print(f"Thread {thread_id} ({color}) exits the fitting room.")
             self.room_sem.release()
@@ -71,6 +88,14 @@ class FittingRoom:
 
 
 def simulate_fitting_room(n, b, g):
+    """This simulates the fitting room problem. It will prepare the threads and shuffle them before starting them.
+    It also provides a run thread function that simply enters then exits the room.
+
+    Args:
+        n (int): number of slots inside the fitting room
+        b (int): number of blue threads
+        g (int): number of green threads
+    """
     fitting_room = FittingRoom(n)
     threads = []
 
